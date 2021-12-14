@@ -1,0 +1,203 @@
+@use "../utils" as *;
+
+.navigation {
+  display: grid;
+  grid-template-columns: auto minmax(160px, 210px) 40px;
+  align-items: center;
+  padding: 2rem 1.5rem;
+
+  @include breakpoint(lg) {
+    grid-template-columns: auto auto 160px 40px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &__icon {
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--white-o1);
+      border-radius: 10px;
+      position: relative;
+
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 50%;
+        height: 100%;
+        background: var(--white-o1);
+        right: 0;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+    }
+
+    &__text {
+      color: var(--white-o1);
+      font-size: rem(15);
+      font-weight: 500;
+      letter-spacing: -0.5px;
+      user-select: none;
+    }
+  }
+
+  .search {
+    display: flex;
+    margin-left: 16px;
+
+    &.open {
+      .search_button_loupe {
+        transform: translateY(-50%);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .search_button_text {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .search_input {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: all;
+      }
+    }
+
+    &_input {
+      width: 100%;
+      background: none;
+      border: none;
+      outline: none;
+      transform: translateY(50%);
+      opacity: 0;
+      transition: transform 0.2s ease-in-out, opacity 0.1s ease-in-out;
+      border-bottom: 1px solid var(--white-o3);
+      margin-right: 10px;
+      pointer-events: none;
+      color: var(--white-o1);
+      font-size: rem(14);
+      font-weight: 300;
+      transition: border-color 0.15s ease-in-out;
+
+      &:focus {
+        border-color: var(--white-o1);
+      }
+
+      .search--active & {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    &_button {
+      display: grid;
+      place-items: center;
+      position: relative;
+      padding: 10px;
+      background: none;
+      border: none;
+      color: var(--white-o1);
+
+      &_loupe,
+      &_text {
+        position: absolute;
+        transition: transform 0.2s ease-in-out, opacity 0.1s ease-in-out;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
+      &_text {
+        transform: translateY(100%);
+        opacity: 0;
+        pointer-events: none;
+        font-size: rem(15);
+
+        &_content {
+          position: relative;
+          transform-origin: center center;
+
+          &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--yellow);
+            z-index: -1;
+            left: 50%;
+            top: 50%;
+            transition: opacity 0.25s ease-in-out;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+          }
+
+          &:hover {
+            color: var(--black);
+            &::after {
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      &_icon {
+        fill: var(--white-o1);
+        transform: scale(0.6);
+      }
+    }
+  }
+
+  .hamburger {
+    padding: 10px;
+    background: none;
+    border: none;
+    display: grid;
+    align-items: center;
+    align-content: center;
+    row-gap: 5px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &_line {
+      width: 20px;
+      height: 2px;
+      background-color: var(--white-o1);
+
+      &--bottom {
+        width: 14px;
+        justify-self: end;
+      }
+    }
+  }
+
+  .menu {
+    display: none;
+
+    @include breakpoint(lg) {
+      display: flex;
+      padding: 0;
+      margin: 0;
+      margin-left: 80px;
+      white-space: nowrap;
+      column-gap: 28px;
+      row-gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    &_link {
+      text-decoration: none;
+      color: var(--white-o1);
+      font-size: rem(15);
+    }
+  }
+}
