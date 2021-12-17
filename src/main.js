@@ -1,4 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
+  //utils
+  const addClassToElement = (element, newClass) => {
+    element.classList.add(newClass);
+  };
+
+  const removeClassFromElement = (element, targetClass) => {
+    if (element.classList.contains(targetClass)) {
+      element.classList.remove(targetClass);
+    }
+  };
   // mechanism for searchbar
   const searchButtonLoupe = document.querySelector(
     "[data-element='search-button-loupe']"
@@ -28,6 +38,17 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("click", handleClickOutsideSearchbar);
   });
 
+  searchInput.addEventListener(
+    "input",
+    function ({ target: { value }, currentTarget }) {
+      if (value) {
+        addClassToElement(currentTarget, "not-empty");
+      } else {
+        removeClassFromElement(currentTarget, "not-empty");
+      }
+    }
+  );
+
   // search button animation on hover and mousemove
   const searchButtonText = document.querySelector(
     "[data-element='search-button-text']"
@@ -35,36 +56,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const {
     height,
+    width,
     x: buttonX,
     y: buttonY,
   } = searchButtonText.getBoundingClientRect();
-  //   console.log(searchButtonText.getBoundingClientRect());
-  //   console.table(x, y);
 
-  const searchButtonMaximumDeviation = {
-    bottom: buttonY + height,
-    left: buttonX - height,
-    right: buttonX + height,
-    top: buttonY - height,
+  const searchButtonCenter = {
+    //prettier-ignore
+    x: buttonX + (width / 2),
+    //prettier-ignore
+    y: buttonY - (height / 2),
   };
 
-  console.log(
-    buttonX + height,
-    searchButtonMaximumDeviation.right,
-    searchButtonText.getBoundingClientRect()
-  );
+  const searchButtonMaximumDeviation = {
+    bottom: searchButtonCenter.y + height,
+    left: searchButtonCenter.x - width,
+    right: searchButtonCenter.x + width,
+    top: searchButtonCenter.y - height,
+  };
 
-  //   let searchButtonPosition = [];
   searchButtonText.addEventListener(
     "mousemove",
     function ({ currentTarget, clientX, clientY }) {
-      const posX = clientX - buttonX;
-      const posY = clientY - buttonY;
-
-      console.table(
-        searchButtonMaximumDeviation,
-        searchButtonText.getBoundingClientRect()
-      );
+      const posX = clientX - searchButtonCenter.x;
+      const posY = clientY - searchButtonCenter.y;
 
       if (
         clientY > searchButtonMaximumDeviation.bottom ||
@@ -72,12 +87,15 @@ document.addEventListener("DOMContentLoaded", function () {
         clientX > searchButtonMaximumDeviation.right ||
         clientX < searchButtonMaximumDeviation.left
       ) {
-        console.log("out");
-        //   } else {
-        setTimeout(() => {
-          currentTarget.style.transform = `translate(${posX}px, ${posY}px)`;
-        }, 100);
+        addClassToElement(currentTarget, "default-position");
+      } else {
+        removeClassFromElement(currentTarget, "default-position");
+        currentTarget.style.transform = `translate(${posX}px, ${posY}px)`;
       }
     }
   );
+
+  searchButtonText.addEventListener("mouseout", function () {
+    addClassToElement(searchButtonText, "default-position");
+  });
 });

@@ -1,6 +1,7 @@
 @use "../utils" as *;
 
 .navigation {
+  $self: &;
   display: grid;
   grid-template-columns: auto minmax(160px, 210px) 40px;
   align-items: center;
@@ -65,6 +66,10 @@
         opacity: 1;
         transform: translateY(0);
         pointer-events: all;
+
+        &.not-empty {
+          border-color: var(--yellow);
+        }
       }
     }
 
@@ -102,6 +107,15 @@
       background: none;
       border: none;
       color: var(--white-o1);
+      outline: none;
+
+      &:focus {
+        .search_button_text_content {
+          &:after {
+            opacity: 1;
+          }
+        }
+      }
 
       &_loupe,
       &_text {
@@ -110,6 +124,14 @@
 
         &:hover {
           cursor: pointer;
+        }
+      }
+
+      &_loupe {
+        #{$self} .search.open & {
+          transform: translateY(-50%);
+          opacity: 0;
+          pointer-events: none;
         }
       }
 
@@ -122,6 +144,12 @@
         &_content {
           position: relative;
           transform-origin: center center;
+          transition: transform 0.1s cubic-bezier(0.32, 0.94, 0.6, 1);
+          will-change: transform;
+
+          &.default-position {
+            transform: translate(0px, 0px) !important;
+          }
 
           &::after {
             content: "";
@@ -143,6 +171,7 @@
             color: var(--black);
             &::after {
               opacity: 1;
+              transform: translate(-50%, -50%) scale(1.2);
             }
           }
         }
@@ -174,6 +203,7 @@
       background-color: var(--white-o1);
 
       &--bottom {
+        @extend .hamburger_line;
         width: 14px;
         justify-self: end;
       }
@@ -198,6 +228,28 @@
       text-decoration: none;
       color: var(--white-o1);
       font-size: rem(15);
+      position: relative;
+      outline: none;
+
+      &:after {
+        content: "";
+        display: block;
+        width: 5px;
+        height: 5px;
+        background-color: var(--yellow);
+        border-radius: 50%;
+        position: absolute;
+        bottom: -75%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+      }
+
+      &:focus {
+        &:after {
+          opacity: 1;
+        }
+      }
     }
   }
 }
